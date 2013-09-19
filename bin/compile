@@ -136,6 +136,16 @@ function package_download() {
   tar xzf $package_name -C $location
 }
 
+# Download intalio package
+download_url=$(sed -n 's/war_file_url:\(.*\)$/\1/p' app/manifest.yml)
+if [ ! -z "$download_url" ]; then
+  curl -s $download_url -o tmp.zip
+  unzip -q -o tmp.zip -d app
+  rm -f tmp.zip
+else
+  echo "No dowload url found"
+fi
+
 bootstrap_node=$(mktmpdir bootstrap_node)
 package_download "nodejs" "0.4.7" $bootstrap_node
 
